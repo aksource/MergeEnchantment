@@ -6,7 +6,7 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-@Mod(modid="MergeEnchantment", name="MergeEnchantment", version="1.2b",dependencies="required-after:FML", useMetadata = true)
+@Mod(modid="MergeEnchantment", name="MergeEnchantment", version="@VERSION@",dependencies="required-after:FML", useMetadata = true)
 public class MergeEnchantment
 {
 	@Mod.Instance("MergeEnchantment")
