@@ -1,8 +1,6 @@
 package MergeEnchantment;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
+import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -11,7 +9,9 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
-import cpw.mods.fml.common.registry.GameRegistry;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class MergeEnchantmentRecipes implements IRecipe
 {

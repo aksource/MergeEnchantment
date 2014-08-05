@@ -1,8 +1,5 @@
 package MergeEnchantment;
 
-import java.util.Iterator;
-import java.util.Map;
-
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.inventory.InventoryCrafting;
@@ -10,6 +7,9 @@ import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
+
+import java.util.Iterator;
+import java.util.Map;
 
 public class AddEnchantmentRecipes implements IRecipe
 {

@@ -1,10 +1,10 @@
 package MergeEnchantment;
 
-import net.minecraftforge.oredict.RecipeSorter;
-import net.minecraftforge.oredict.RecipeSorter.Category;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.RecipeSorter;
+import net.minecraftforge.oredict.RecipeSorter.Category;
 
 @Mod(modid="MergeEnchantment", name="MergeEnchantment", version="@VERSION@",dependencies="required-after:FML", useMetadata = true)
 public class MergeEnchantment
