@@ -1,6 +1,6 @@
 package MergeEnchantment;
 
-import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -43,13 +43,11 @@ public class MergeEnchantmentRecipes implements IRecipe
 					{
 						toolflag++;
 						items[0] = craftitem.copy();
-						continue;
 					}
 					else if(GameRegistry.findUniqueIdentifierFor(items[0].getItem()).equals(GameRegistry.findUniqueIdentifierFor(craftitem.getItem())) && toolflag ==1)
 					{
 						items[1] = craftitem.copy();
 						toolflag++;
-						continue;
 					}
 					else
 					{
@@ -59,14 +57,12 @@ public class MergeEnchantmentRecipes implements IRecipe
 				else if(GameRegistry.findUniqueIdentifierFor(craftitem.getItem()).equals(GameRegistry.findUniqueIdentifierFor(Items.book)) && bookflag == 0)
 				{
 					bookflag++;
-					continue;
 				}
 				else
 				{
 					return false;
 				}
 			}
-			else continue;
 		}
 		if(items[0] != null && items[1] != null && toolflag > 0 && toolflag < 3 && bookflag > 0)
 			flag =true;
@@ -80,7 +76,7 @@ public class MergeEnchantmentRecipes implements IRecipe
 		for (int i = 0; i < Enchantment.enchantmentsList.length; i++) {
 			int lv = getMaxEnchantmentLevel(i, items);
 			if (lv > 0) {
-				alist.add(new EnchantmentData(Enchantment.enchantmentsList[i], lv));
+				alist.add(new EnchantmentData(Enchantment.func_180306_c(i), lv));
 			}
 		}
 
@@ -128,10 +124,10 @@ public class MergeEnchantmentRecipes implements IRecipe
 	{
 		int j = 0;
 		int intarray[] = new int[]{0,0};
-		ItemStack aitemstack1[] = aitemstack;
-		int k = aitemstack1.length;
+//		ItemStack aitemstack1[] = aitemstack;
+		int k = aitemstack.length;
 		for (int l = 0; l < k; l++) {
-			ItemStack itemstack = aitemstack1[l];
+			ItemStack itemstack = aitemstack[l];
 			int i1 = EnchantmentHelper.getEnchantmentLevel(i, itemstack);
 			intarray[l] = (i1 > 0)? i1:0;
 			if (i1 > j) {
@@ -142,7 +138,7 @@ public class MergeEnchantmentRecipes implements IRecipe
 		{
 			SameEnch[SameEnchindex] =  Enchantment.enchantmentsList[i];
 			SameEnchindex++;
-			System.out.println("Same Lv");
+//			System.out.println("Same Lv");
 		}
 		return j;
 	}
@@ -158,4 +154,18 @@ public class MergeEnchantmentRecipes implements IRecipe
 	{
 		return this.output;
 	}
+
+    @Override
+    public ItemStack[] func_179532_b(InventoryCrafting p_179532_1_)
+    {
+        ItemStack[] aitemstack = new ItemStack[p_179532_1_.getSizeInventory()];
+
+        for (int i = 0; i < aitemstack.length; ++i)
+        {
+            ItemStack itemstack = p_179532_1_.getStackInSlot(i);
+            aitemstack[i] = net.minecraftforge.common.ForgeHooks.getContainerItem(itemstack);
+        }
+
+        return aitemstack;
+    }
 }

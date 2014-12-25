@@ -8,7 +8,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 
-import java.util.Iterator;
 import java.util.Map;
 
 public class AddEnchantmentRecipes implements IRecipe
@@ -16,6 +15,7 @@ public class AddEnchantmentRecipes implements IRecipe
 
 	private ItemStack output = null;
 
+    @SuppressWarnings("unchecked")
 	@Override
 	public boolean matches(InventoryCrafting inv, World world)
 	{
@@ -24,9 +24,9 @@ public class AddEnchantmentRecipes implements IRecipe
 		int bookflag = 0;
 		ItemStack book = null;
 		boolean flag = false;
-		int EnchInt1;
+//		int EnchInt1;
 		Enchantment ench1;
-		int EnchInt2;
+//		int EnchInt2;
 		Enchantment ench2;
 		ItemStack craftitem;
 		for (int i = 0; i < inv.getSizeInventory(); i++) {
@@ -41,36 +41,32 @@ public class AddEnchantmentRecipes implements IRecipe
 				} else {
 					return false;
 				}
-			} else
-				continue;
+			}
 		}
 		if (toolflag > 0 && toolflag < 2 && bookflag > 0 && bookflag < 2) {
-			Map toolenchlist = EnchantmentHelper.getEnchantments(tool);
-			Map bookenchlist = EnchantmentHelper.getEnchantments(book);
-			Iterator var1 = bookenchlist.keySet().iterator();
-			Iterator var2 = toolenchlist.keySet().iterator();
-			while (var1.hasNext()) {
-				EnchInt1 = ((Integer) var1.next()).intValue();
-				ench1 = Enchantment.enchantmentsList[EnchInt1];
-				int var3 = toolenchlist.containsKey(Integer.valueOf(EnchInt1)) ? ((Integer) toolenchlist.get(Integer
-						.valueOf(EnchInt1))).intValue() : 0;
-				int var4 = ((Integer) bookenchlist.get(Integer.valueOf(EnchInt1))).intValue();
-				int Max;
-				if (var3 == var4) {
-					Max = var4;
-				} else {
-					Max = Math.max(var4, var3);
-				}
+			Map<Integer, Integer> toolenchlist = EnchantmentHelper.getEnchantments(tool);
+			Map<Integer, Integer> bookenchlist = EnchantmentHelper.getEnchantments(book);
+            for (int EnchInt1 : bookenchlist.keySet()) {
+//                EnchInt1 = ((Integer) var1.next()).intValue();
+                ench1 = Enchantment.enchantmentsList[EnchInt1];
+                int var3 = toolenchlist.containsKey(EnchInt1) ? toolenchlist.get(EnchInt1) : 0;
+                int var4 = bookenchlist.get(EnchInt1);
+                int Max;
+                if (var3 == var4) {
+                    Max = var4;
+                } else {
+                    Max = Math.max(var4, var3);
+                }
 
-				var4 = Max;
-				flag = ench1.canApplyAtEnchantingTable(tool);
-				while (var2.hasNext()) {
-					EnchInt2 = ((Integer) var2.next()).intValue();
-					ench2 = Enchantment.enchantmentsList[EnchInt2];
-					flag = ench1.canApplyTogether(ench2);
-				}
-				toolenchlist.put(Integer.valueOf(EnchInt1), Integer.valueOf(var4));
-			}
+                var4 = Max;
+                flag = ench1.canApplyAtEnchantingTable(tool);
+                for (int EnchInt2 : toolenchlist.keySet()) {
+                    ench2 = Enchantment.func_180306_c(EnchInt2);
+                    flag = ench1.canApplyTogether(ench2);
+                }
+
+                toolenchlist.put(EnchInt1, var4);
+            }
 			this.output = tool;
 			int var5 = (this.output.getItemDamage() - this.output.getMaxDamage() / 20 < 1) ? 1 : this.output
 					.getItemDamage() - this.output.getMaxDamage() / 20;
@@ -96,4 +92,18 @@ public class AddEnchantmentRecipes implements IRecipe
 	public ItemStack getRecipeOutput() {
 		return this.output;
 	}
+
+    @Override
+    public ItemStack[] func_179532_b(InventoryCrafting p_179532_1_)
+    {
+        ItemStack[] aitemstack = new ItemStack[p_179532_1_.getSizeInventory()];
+
+        for (int i = 0; i < aitemstack.length; ++i)
+        {
+            ItemStack itemstack = p_179532_1_.getStackInSlot(i);
+            aitemstack[i] = net.minecraftforge.common.ForgeHooks.getContainerItem(itemstack);
+        }
+
+        return aitemstack;
+    }
 }
