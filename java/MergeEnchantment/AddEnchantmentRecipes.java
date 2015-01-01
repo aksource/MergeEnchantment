@@ -48,7 +48,7 @@ public class AddEnchantmentRecipes implements IRecipe
 			Map<Integer, Integer> bookenchlist = EnchantmentHelper.getEnchantments(book);
             for (int EnchInt1 : bookenchlist.keySet()) {
 //                EnchInt1 = ((Integer) var1.next()).intValue();
-                ench1 = Enchantment.enchantmentsList[EnchInt1];
+                ench1 = Enchantment.func_180306_c(EnchInt1);
                 int var3 = toolenchlist.containsKey(EnchInt1) ? toolenchlist.get(EnchInt1) : 0;
                 int var4 = bookenchlist.get(EnchInt1);
                 int Max;

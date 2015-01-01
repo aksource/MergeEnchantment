@@ -73,7 +73,7 @@ public class MergeEnchantmentRecipes implements IRecipe
 	public ItemStack getCraftingResult(InventoryCrafting inventorycrafting)
 	{
 		ArrayList<EnchantmentData> alist = new ArrayList<EnchantmentData>();
-		for (int i = 0; i < Enchantment.enchantmentsList.length; i++) {
+		for (int i = 0; i < 256; i++) {
 			int lv = getMaxEnchantmentLevel(i, items);
 			if (lv > 0) {
 				alist.add(new EnchantmentData(Enchantment.func_180306_c(i), lv));
@@ -136,7 +136,7 @@ public class MergeEnchantmentRecipes implements IRecipe
 		}
 		if(intarray[0] == intarray[1] && intarray[0] != 0)
 		{
-			SameEnch[SameEnchindex] =  Enchantment.enchantmentsList[i];
+			SameEnch[SameEnchindex] =  Enchantment.func_180306_c(i);
 			SameEnchindex++;
 //			System.out.println("Same Lv");
 		}
