@@ -59,7 +59,7 @@ public class MergeEnchantmentRecipes implements IRecipe {
         for (int i = 0; i < 256; i++) {
             int lv = getMaxEnchantmentLevel(i, items);
             if (lv > 0) {
-                alist.add(new EnchantmentData(Enchantment.func_180306_c(i), lv));
+                alist.add(new EnchantmentData(Enchantment.getEnchantmentById(i), lv));
             }
         }
 
@@ -111,7 +111,7 @@ public class MergeEnchantmentRecipes implements IRecipe {
             }
         }
         if (intarray[0] == intarray[1] && intarray[0] != 0) {
-            SameEnch[SameEnchindex] = Enchantment.func_180306_c(i);
+            SameEnch[SameEnchindex] = Enchantment.getEnchantmentById(i);
             SameEnchindex++;
 //			System.out.println("Same Lv");
         }
@@ -129,7 +129,7 @@ public class MergeEnchantmentRecipes implements IRecipe {
     }
 
     @Override
-    public ItemStack[] func_179532_b(InventoryCrafting p_179532_1_) {
+    public ItemStack[] getRemainingItems(InventoryCrafting p_179532_1_) {
         ItemStack[] aitemstack = new ItemStack[p_179532_1_.getSizeInventory()];
 
         for (int i = 0; i < aitemstack.length; ++i) {
