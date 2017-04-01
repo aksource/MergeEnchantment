@@ -6,38 +6,39 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import java.util.Map;
 
 public class AddEnchantmentRecipes implements IRecipe {
 
-    private ItemStack output = null;
+    private ItemStack output = ItemStack.EMPTY;
 
-    @SuppressWarnings("unchecked")
     @Override
-    public boolean matches(InventoryCrafting inv, World world) {
-        int toolflag = 0;
+    public boolean matches(@Nonnull InventoryCrafting inv, @Nonnull World world) {
+        int toolFlag = 0;
         ItemStack tool = null;
-        int bookflag = 0;
+        int bookFlag = 0;
         ItemStack book = null;
         boolean flag = false;
-        ItemStack craftitem;
+        ItemStack craftItem;
         for (int i = 0; i < inv.getSizeInventory(); i++) {
-            craftitem = inv.getStackInSlot(i);
-            if (craftitem != null) {
-                if (craftitem.getItem().getItemEnchantability() > 0/*craftitem.getItem().isRepairable()*/) {
-                    toolflag++;
-                    tool = craftitem.copy();
-                } else if (craftitem.getItem() instanceof ItemEnchantedBook) {
-                    bookflag++;
-                    book = craftitem.copy();
+            craftItem = inv.getStackInSlot(i);
+            if (!craftItem.isEmpty()) {
+                if (craftItem.getItem().getItemEnchantability() > 0) {
+                    toolFlag++;
+                    tool = craftItem.copy();
+                } else if (craftItem.getItem() instanceof ItemEnchantedBook) {
+                    bookFlag++;
+                    book = craftItem.copy();
                 } else {
                     return false;
                 }
             }
         }
-        if (toolflag > 0 && toolflag < 2 && bookflag > 0 && bookflag < 2) {
+        if (toolFlag > 0 && toolFlag < 2 && bookFlag > 0 && bookFlag < 2) {
             Map<Enchantment, Integer> toolenchlist = EnchantmentHelper.getEnchantments(tool);
             Map<Enchantment, Integer> bookenchlist = EnchantmentHelper.getEnchantments(book);
             for (Enchantment ench1 : bookenchlist.keySet()) {
@@ -53,7 +54,7 @@ public class AddEnchantmentRecipes implements IRecipe {
                 var4 = Max;
                 flag = ench1.canApplyAtEnchantingTable(tool);
                 for (Enchantment ench2 : toolenchlist.keySet()) {
-                    flag = ench1.canApplyTogether(ench2);
+                    flag = ench1.func_191560_c/*canApplyTogether*/(ench2);
                 }
 
                 toolenchlist.put(ench1, var4);
@@ -69,7 +70,8 @@ public class AddEnchantmentRecipes implements IRecipe {
     }
 
     @Override
-    public ItemStack getCraftingResult(InventoryCrafting inventorycrafting) {
+    @Nonnull
+    public ItemStack getCraftingResult(@Nonnull InventoryCrafting inventorycrafting) {
         return this.output.copy();
     }
 
@@ -79,19 +81,23 @@ public class AddEnchantmentRecipes implements IRecipe {
     }
 
     @Override
+    @Nonnull
     public ItemStack getRecipeOutput() {
         return this.output;
     }
 
     @Override
-    public ItemStack[] getRemainingItems(InventoryCrafting inventoryCrafting) {
-        ItemStack[] aitemstack = new ItemStack[inventoryCrafting.getSizeInventory()];
+    @Nonnull
+    public NonNullList<ItemStack> getRemainingItems(@Nonnull InventoryCrafting inventoryCrafting) {
+        NonNullList<ItemStack> nonNullList = NonNullList.withSize(inventoryCrafting.getSizeInventory(), ItemStack.EMPTY);
 
-        for (int i = 0; i < aitemstack.length; ++i) {
+        for (int i = 0; i < nonNullList.size(); ++i) {
             ItemStack itemstack = inventoryCrafting.getStackInSlot(i);
-            aitemstack[i] = net.minecraftforge.common.ForgeHooks.getContainerItem(itemstack);
+            if (itemstack.getItem().hasContainerItem(itemstack)) {
+                nonNullList.set(i, itemstack.getItem().getContainerItem(itemstack));
+            }
         }
 
-        return aitemstack;
+        return nonNullList;
     }
 }

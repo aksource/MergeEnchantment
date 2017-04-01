@@ -3,6 +3,7 @@ package MergeEnchantment;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -17,11 +18,11 @@ import net.minecraftforge.oredict.RecipeSorter.Category;
         acceptedMinecraftVersions = MergeEnchantment.MOD_MC_VERSION)
 public class MergeEnchantment {
 
-    public static final String MOD_ID = "MergeEnchantment";
+    public static final String MOD_ID = "mergeenchantment";
     public static final String MOD_NAME = "MergeEnchantment";
     public static final String MOD_VERSION = "@VERSION@";
-    public static final String MOD_DEPENDENCIES = "required-after:Forge@[12.17.0,)";
-    public static final String MOD_MC_VERSION = "[1.9,1.10.99]";
+    public static final String MOD_DEPENDENCIES = "required-after:forge@[13.20.0,)";
+    public static final String MOD_MC_VERSION = "[1.11,1.99.99]";
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
@@ -32,16 +33,16 @@ public class MergeEnchantment {
     }
 
     static String getUniqueStrings(Object obj) {
-        String registryName = "none:dummy";
         if (obj instanceof ItemStack) {
             obj = ((ItemStack) obj).getItem();
         }
-        if (obj instanceof Block) {
-            registryName = ((Block) obj).getRegistryName().toString();
+        ResourceLocation resourceLocation = new ResourceLocation("none", "dummy");
+        if (obj instanceof Block && ((Block) obj).getRegistryName() != null) {
+            resourceLocation = ((Block) obj).getRegistryName();
         }
-        if (obj instanceof Item) {
-            registryName = ((Item) obj).getRegistryName().toString();
+        if (obj instanceof Item && ((Item) obj).getRegistryName() != null) {
+            resourceLocation = ((Item) obj).getRegistryName();
         }
-        return registryName;
+        return resourceLocation.toString();
     }
 }

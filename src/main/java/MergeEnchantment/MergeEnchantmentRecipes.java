@@ -7,15 +7,17 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 public class MergeEnchantmentRecipes implements IRecipe {
     private Enchantment[] SameEnch = new Enchantment[256];
     private int SameEnchindex = 0;
-    private ItemStack output = null;
+    private ItemStack output = ItemStack.EMPTY;
     private ItemStack items[] = new ItemStack[2];
 
 
@@ -30,7 +32,7 @@ public class MergeEnchantmentRecipes implements IRecipe {
         ItemStack craftitem;
         for (int i = 0; i < inv.getSizeInventory(); i++) {
             craftitem = inv.getStackInSlot(i);
-            if (craftitem != null) {
+            if (!craftitem.isEmpty()) {
                 if (craftitem.getItem().getItemEnchantability() > 0
                         && !MergeEnchantment.getUniqueStrings(craftitem).equals(MergeEnchantment.getUniqueStrings(Items.BOOK))) {
                     if (items[0] == null) {
@@ -57,7 +59,8 @@ public class MergeEnchantmentRecipes implements IRecipe {
     }
 
     @Override
-    public ItemStack getCraftingResult(InventoryCrafting inventorycrafting) {
+    @Nonnull
+    public ItemStack getCraftingResult(@Nonnull InventoryCrafting inventorycrafting) {
         ArrayList<EnchantmentData> enchantmentDatas = new ArrayList<>();
         Enchantment.REGISTRY.forEach(enchantment -> {
             int lv = getMaxEnchantmentLevel(enchantment, items);
@@ -69,7 +72,7 @@ public class MergeEnchantmentRecipes implements IRecipe {
         for (Iterator<EnchantmentData> it = enchantmentDatas.iterator(); it.hasNext(); ) {
             EnchantmentData data = it.next();
             for (EnchantmentData data2 : enchantmentDatas) {
-                if (!data.enchantmentobj.canApplyTogether(data2.enchantmentobj)
+                if (!data.enchantmentobj.func_191560_c/*canApplyTogether*/(data2.enchantmentobj)
                         && data.enchantmentLevel < data2.enchantmentLevel) {
                     it.remove();
                     break;
@@ -88,7 +91,7 @@ public class MergeEnchantmentRecipes implements IRecipe {
             }
         }
         boolean flag;
-        if (output.getItem().isDamageable() && items[0].stackSize == 1 && items[1].stackSize == 1) {
+        if (output.getItem().isDamageable() && items[0].getCount() == 1 && items[1].getCount() == 1) {
             int a1 = output.getMaxDamage() - items[0].getItemDamage();
             int a2 = output.getMaxDamage() - items[1].getItemDamage();
             int a3 = output.getMaxDamage() - (a1 + a2);
@@ -126,19 +129,23 @@ public class MergeEnchantmentRecipes implements IRecipe {
     }
 
     @Override
+    @Nonnull
     public ItemStack getRecipeOutput() {
         return this.output;
     }
 
     @Override
-    public ItemStack[] getRemainingItems(InventoryCrafting inventoryCrafting) {
-        ItemStack[] aitemstack = new ItemStack[inventoryCrafting.getSizeInventory()];
+    @Nonnull
+    public NonNullList<ItemStack> getRemainingItems(@Nonnull InventoryCrafting inventoryCrafting) {
+        NonNullList<ItemStack> nonNullList = NonNullList.withSize(inventoryCrafting.getSizeInventory(), ItemStack.EMPTY);
 
-        for (int i = 0; i < aitemstack.length; ++i) {
+        for (int i = 0; i < nonNullList.size(); ++i) {
             ItemStack itemstack = inventoryCrafting.getStackInSlot(i);
-            aitemstack[i] = net.minecraftforge.common.ForgeHooks.getContainerItem(itemstack);
+            if (itemstack.getItem().hasContainerItem(itemstack)) {
+                nonNullList.set(i, itemstack.getItem().getContainerItem(itemstack));
+            }
         }
 
-        return aitemstack;
+        return nonNullList;
     }
 }
