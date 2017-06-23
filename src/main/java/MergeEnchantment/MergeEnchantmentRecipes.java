@@ -72,7 +72,7 @@ public class MergeEnchantmentRecipes implements IRecipe {
         for (Iterator<EnchantmentData> it = enchantmentDatas.iterator(); it.hasNext(); ) {
             EnchantmentData data = it.next();
             for (EnchantmentData data2 : enchantmentDatas) {
-                if (!data.enchantmentobj.func_191560_c/*canApplyTogether*/(data2.enchantmentobj)
+                if (!data.enchantment.func_191560_c/*canApplyTogether*/(data2.enchantment)
                         && data.enchantmentLevel < data2.enchantmentLevel) {
                     it.remove();
                     break;
@@ -83,11 +83,11 @@ public class MergeEnchantmentRecipes implements IRecipe {
         output = new ItemStack(items[0].getItem(), 1, items[0].getItemDamage());
         SameEnchindex = 0;
         for (EnchantmentData data : enchantmentDatas) {
-            if (SameEnch[SameEnchindex] != null && SameEnch[SameEnchindex].equals(data.enchantmentobj)) {
-                output.addEnchantment(data.enchantmentobj, data.enchantmentLevel + 1);
+            if (SameEnch[SameEnchindex] != null && SameEnch[SameEnchindex].equals(data.enchantment)) {
+                output.addEnchantment(data.enchantment, data.enchantmentLevel + 1);
                 SameEnchindex++;
             } else {
-                output.addEnchantment(data.enchantmentobj, data.enchantmentLevel);
+                output.addEnchantment(data.enchantment, data.enchantmentLevel);
             }
         }
         boolean flag;
